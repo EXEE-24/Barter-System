@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Мои предложения обмена</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="bi bi-inbox"></i> Полученные предложения</h3>
+                </div>
+                <div class="card-body">
+                    {% if received_proposals %}
+                    <div class="list-group">
+                        {% for proposal in received_proposals %}
+                        <div class="list-group-item mb-3">
+                            <div class="d-flex justify-content-between">
+                                <h5>{{ proposal.ad_sender.title }}</h5>
+                                <span class="badge bg-{% if proposal.status == 'pending' %}warning{% elif proposal.status == 'accepted' %}success{% else %}danger{% endif %}">
+                                    {{ proposal.get_status_display }}
+                                </span>
+                            </div>
+                            <p class="mb-1"><small>От: {{ proposal.ad_sender.user.username }}</small></p>
+                            <p class="mb-2">{{ proposal.comment }}</p>
+                            <p class="text-muted"><small>{{ proposal.created_at|date:"d.m.Y H:i" }}</small></p>
+
+                            {% if proposal.status == 'pending' %}
+                            <form method="post" action="{% url 'exchange:update_proposal' proposal.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" name="status" value="accepted" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check-circle"></i> Принять
+                                </button>
+                                <button type="submit" name="status" value="rejected" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-x-circle"></i> Отклонить
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">Нет полученных предложений</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h3><i class="bi bi-send"></i> Отправленные предложения</h3>
+                </div>
+                <div class="card-body">
+                    {% if sent_proposals %}
+                    <div class="list-group">
+                        {% for proposal in sent_proposals %}
+                        <div class="list-group-item mb-3">
+                            <div class="d-flex justify-content-between">
+                                <h5>{{ proposal.ad_receiver.title }}</h5>
+                                <span class="badge bg-{% if proposal.status == 'pending' %}warning{% elif proposal.status == 'accepted' %}success{% else %}danger{% endif %}">
+                                    {{ proposal.get_status_display }}
+                                </span>
+                            </div>
+                            <p class="mb-1"><small>Кому: {{ proposal.ad_receiver.user.username }}</small></p>
+                            <p class="mb-2">{{ proposal.comment }}</p>
+                            <p class="text-muted"><small>{{ proposal.created_at|date:"d.m.Y H:i" }}</small></p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">Нет отправленных предложений</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

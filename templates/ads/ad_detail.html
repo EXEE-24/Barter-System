@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        {% if ad.image %}
+        <img src="{{ ad.image.url }}" class="card-img-top" alt="{{ ad.title }}" style="max-height: 400px; object-fit: cover;">
+        {% else %}
+        <div class="text-center py-5 bg-light">
+            <i class="bi bi-image" style="font-size: 3rem;"></i>
+            <p>Изображение отсутствует</p>
+        </div>
+        {% endif %}
+
+        <div class="card-body">
+            <h1 class="card-title">{{ ad.title }}</h1>
+
+            <div class="mb-3">
+                <p><strong>Автор:</strong> {{ ad.user.username }}</p>
+                <p><strong>Описание:</strong> {{ ad.description }}</p>
+                <p><strong>Категория:</strong> {{ ad.category.name }}</p>
+                <p><strong>Состояние:</strong> {{ ad.get_condition_display }}</p>
+                <p><strong>Дата создания:</strong> {{ ad.created_at|date:"d.m.Y H:i" }}</p>
+            </div>
+
+            {% if request.user == ad.user %}
+            <div class="btn-group" role="group">
+                <a href="{% url 'ads:ad_update' ad.id %}" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> Редактировать
+                </a>
+                <a href="{% url 'ads:ad_delete' ad.id %}" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Удалить
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Кнопка предложения обмена #}
+    {% if user.is_authenticated and user != ad.user %}
+    <div class="mt-3">
+        <a href="{% url 'exchange:create_proposal' ad.id %}"
+           class="btn btn-primary btn-lg">
+           <i class="bi bi-arrow-repeat"></i> Предложить обмен
+        </a>
+    </div>
+    {% elif not user.is_authenticated %}
+    <div class="alert alert-info mt-3">
+        <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">
+            Войдите, чтобы предложить обмен
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

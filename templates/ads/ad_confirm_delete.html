@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>Подтверждение удаления</h2>
+        </div>
+        <div class="card-body">
+            <p>Вы уверены, что хотите удалить следующее объявление?</p>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3>{{ ad.title }}</h3>
+                    <p>{{ ad.description|truncatechars:100 }}</p>
+                    <p class="text-muted">Категория: {{ ad.category.name }}</p>
+                    <p class="text-muted">Состояние: {{ ad.get_condition_display }}</p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Удалить
+                </button>
+                <a href="{% url 'ads:ad_detail' ad.id %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Отмена
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

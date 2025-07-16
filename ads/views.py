@@ -11,10 +11,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 
 def ad_list(request):
-    # Получаем все активные объявления
     ads = Ad.objects.filter(is_active=True).order_by('-created_at')
 
-    # Поиск по ключевым словам
     search_query = request.GET.get('search')
     if search_query:
         ads = ads.filter(
@@ -22,22 +20,18 @@ def ad_list(request):
             Q(description__icontains=search_query)
         )
 
-    # Фильтрация по категории
     category_id = request.GET.get('category')
     if category_id:
         ads = ads.filter(category__id=category_id)
 
-    # Фильтрация по состоянию товара
     condition = request.GET.get('condition')
     if condition:
         ads = ads.filter(condition=condition)
 
-    # Пагинация
-    paginator = Paginator(ads, 9)  # 9 объявлений на странице
+    paginator = Paginator(ads, 9)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Получаем все категории для фильтра
     categories = Category.objects.all()
 
     return render(request, 'ads/ad_list.html', {

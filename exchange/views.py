@@ -8,7 +8,6 @@ from django.contrib import messages
 
 @login_required
 def proposal_list(request):
-    """Список всех предложений обмена для текущего пользователя"""
     received_proposals = ExchangeProposal.objects.filter(
         ad_receiver__user=request.user
     ).select_related('ad_sender', 'ad_receiver')
@@ -37,7 +36,6 @@ def update_proposal(request, pk):
             proposal.status = new_status
             proposal.save()
             messages.success(request, 'Статус предложения обновлен')
-            # При принятии предложения автоматически отклоняем другие
             if new_status == 'accepted':
                 ExchangeProposal.objects.filter(
                     ad_receiver=proposal.ad_receiver,
@@ -55,7 +53,6 @@ def create_proposal(request, ad_id):
         messages.error(request, 'Вы не можете предложить обмен для своего товара')
         return redirect('ads:ad_detail', pk=ad_id)
 
-    # Проверка существующего предложения
     existing = ExchangeProposal.objects.filter(
         ad_sender__user=request.user,
         ad_receiver=ad_receiver

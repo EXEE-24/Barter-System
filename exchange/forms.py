@@ -2,7 +2,6 @@ from django import forms
 from .models import ExchangeProposal
 from ads.models import Ad
 
-
 class ExchangeProposalForm(forms.ModelForm):
     class Meta:
         model = ExchangeProposal
@@ -13,7 +12,6 @@ class ExchangeProposalForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if user:
-            # Ограничиваем выбор только объявлениями текущего пользователя
             self.fields['ad_sender'].queryset = Ad.objects.filter(
                 user=user,
                 is_active=True

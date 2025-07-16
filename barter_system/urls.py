@@ -24,8 +24,8 @@ from ads import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('ads.urls')),  # Подключение всех URL из приложения ads
+    path('', include('ads.urls')),
     path('exchange/', include('exchange.urls')),
     path('register/', views.register, name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Исправлено MEDIA_ROOT вместо MEDIA_URL
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

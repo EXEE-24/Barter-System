@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-app_name = 'exchange'  # Добавьте эту строку
+app_name = 'exchange'
 
 urlpatterns = [
     path('proposals/', views.proposal_list, name='proposal_list'),

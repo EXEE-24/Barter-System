@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-app_name = 'ads'  # Добавьте эту строку
+app_name = 'ads'
 
 urlpatterns = [
     path('', views.ad_list, name='ad_list'),

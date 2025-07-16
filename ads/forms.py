@@ -1,4 +1,3 @@
-# ads/forms.py
 from django import forms
 from .models import Ad, Category
 from exchange.models import ExchangeProposal
